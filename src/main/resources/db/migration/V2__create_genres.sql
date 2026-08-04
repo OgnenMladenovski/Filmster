@@ -1,0 +1,5 @@
+CREATE TABLE genres (
+    id BIGSERIAL PRIMARY KEY,
+    tmdb_id INTEGER NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL
+);
