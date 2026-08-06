@@ -5,7 +5,6 @@ import org.mk.ukim.finki.nvd.movierecommendationapp.model.dto.DisplayMovieRespon
 import org.mk.ukim.finki.nvd.movierecommendationapp.service.application.MovieApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
