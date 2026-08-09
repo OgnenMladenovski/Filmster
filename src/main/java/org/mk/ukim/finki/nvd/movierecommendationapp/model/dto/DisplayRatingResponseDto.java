@@ -1,7 +1,6 @@
 package org.mk.ukim.finki.nvd.movierecommendationapp.model.dto;
 
 import org.mk.ukim.finki.nvd.movierecommendationapp.model.domain.Rating;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
