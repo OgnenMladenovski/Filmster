@@ -3,6 +3,7 @@ package org.mk.ukim.finki.nvd.movierecommendationapp.web.controller;
 import jakarta.validation.Valid;
 import org.mk.ukim.finki.nvd.movierecommendationapp.model.domain.User;
 import org.mk.ukim.finki.nvd.movierecommendationapp.model.dto.CreateRatingRequestDto;
+import org.mk.ukim.finki.nvd.movierecommendationapp.model.dto.DeleteMessageResponseDto;
 import org.mk.ukim.finki.nvd.movierecommendationapp.model.dto.DisplayRatingResponseDto;
 import org.mk.ukim.finki.nvd.movierecommendationapp.service.application.RatingApplicationService;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,8 @@ public class RatingController {
     }
 
     @DeleteMapping("/{tmdbId}")
-    public ResponseEntity<Void> delete(@AuthenticationPrincipal User user, @PathVariable Integer tmdbId) {
+    public ResponseEntity<DeleteMessageResponseDto> delete(@AuthenticationPrincipal User user, @PathVariable Integer tmdbId) {
         ratingApplicationService.delete(user, tmdbId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new DeleteMessageResponseDto(String.format("Your rating for the movie with id %d was deleted.", tmdbId)));
     }
 }

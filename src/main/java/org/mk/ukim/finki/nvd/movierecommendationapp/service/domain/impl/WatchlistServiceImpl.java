@@ -7,7 +7,6 @@ import org.mk.ukim.finki.nvd.movierecommendationapp.model.exception.WatchlistNot
 import org.mk.ukim.finki.nvd.movierecommendationapp.repository.WatchlistRepository;
 import org.mk.ukim.finki.nvd.movierecommendationapp.service.domain.WatchlistService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
