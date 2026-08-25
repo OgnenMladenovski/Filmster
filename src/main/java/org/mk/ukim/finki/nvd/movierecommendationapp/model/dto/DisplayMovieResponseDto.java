@@ -1,6 +1,8 @@
 package org.mk.ukim.finki.nvd.movierecommendationapp.model.dto;
 
 import org.mk.ukim.finki.nvd.movierecommendationapp.model.domain.Movie;
+import org.mk.ukim.finki.nvd.movierecommendationapp.model.domain.Recommendation;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -13,8 +15,7 @@ public record DisplayMovieResponseDto(
         LocalDate releaseDate,
         BigDecimal tmdbRating
 ) {
-    public static DisplayMovieResponseDto from(Movie movie)
-    {
+    public static DisplayMovieResponseDto from(Movie movie) {
         return new DisplayMovieResponseDto(
                 movie.getId(),
                 movie.getTmdbId(),
@@ -25,8 +26,7 @@ public record DisplayMovieResponseDto(
         );
     }
 
-    public static List<DisplayMovieResponseDto> from(List<Movie> movies)
-    {
+    public static List<DisplayMovieResponseDto> from(List<Movie> movies) {
         return movies
                 .stream()
                 .map(DisplayMovieResponseDto::from)

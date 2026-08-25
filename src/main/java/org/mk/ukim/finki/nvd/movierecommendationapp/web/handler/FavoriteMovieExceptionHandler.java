@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.mk.ukim.finki.nvd.movierecommendationapp.model.exception.FavoriteMovieAlreadyExistsException;
 import org.mk.ukim.finki.nvd.movierecommendationapp.model.exception.FavoriteMovieListIsFullException;
 import org.mk.ukim.finki.nvd.movierecommendationapp.model.exception.FavoriteMovieNotFoundException;
+import org.mk.ukim.finki.nvd.movierecommendationapp.model.exception.NotEnoughFavoriteMoviesException;
 import org.mk.ukim.finki.nvd.movierecommendationapp.web.dto.ApiErrorResponseDto;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
