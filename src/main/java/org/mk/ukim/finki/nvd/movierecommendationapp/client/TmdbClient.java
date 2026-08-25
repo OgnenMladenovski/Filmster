@@ -53,4 +53,20 @@ public class TmdbClient {
         }
         return response.results();
     }
+
+    public List<TmdbSearchResult> fetchSimilar(Integer tmdbId){
+        TmdbSearchResponse response = restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/movie/{id}/similar")
+                        .queryParam("api_key", apiKey)
+                        .build(tmdbId))
+                .retrieve()
+                .body(TmdbSearchResponse.class);
+
+        if ((response == null) || response.results() == null){
+                return List.of();
+        }
+
+        return response.results();
+    }
 }
