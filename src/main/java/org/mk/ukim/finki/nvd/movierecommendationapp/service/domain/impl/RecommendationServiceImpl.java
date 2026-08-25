@@ -77,10 +77,19 @@ public class RecommendationServiceImpl implements RecommendationService {
                 )).toList();
 
         TmdbRecommendationRequest request = new TmdbRecommendationRequest(favoriteMovieDtos, candidateDtos, 10);
-        TmdbRecommendationResponse response = recommendationServiceClient.recommend(request);
+
+        List<TmdbRecommendationItemDto> recommendationItems;
+
+        try {
+            TmdbRecommendationResponse recommendationResponse = recommendationServiceClient.recommend(request);
+            recommendationItems = recommendationResponse.recommendations();
+        } catch (Exception exception){
+            log.warn("Recommendation service unavailable, falling back to top-rated candidates", exception);
+            recommendationItems = buildFallbackRecommendations(pool, 10);
+        }
 
         List<Recommendation> newRecommendations = new ArrayList<>();
-        for (TmdbRecommendationItemDto item : response.recommendations()){
+        for (TmdbRecommendationItemDto item : recommendationItems){
             if (!poolByImdbId.containsKey(item.tmdbId())){
                 continue;
             }
@@ -88,7 +97,9 @@ public class RecommendationServiceImpl implements RecommendationService {
             newRecommendations.add(new Recommendation(user, movie, item.rank(), item.reason()));
         }
 
+
         recommendationRepository.deleteAllByUser(user);
+        recommendationRepository.flush();
         recommendationRepository.saveAll(newRecommendations);
     }
 
