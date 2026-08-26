@@ -7,4 +7,5 @@ import java.util.List;
 public interface MovieApplicationService {
     List<DisplayMovieResponseDto> search(String query);
     DisplayMovieDetailsResponseDto findByTmdbId(Integer tmdbId);
+    List<DisplayMovieResponseDto> findByGenre(Integer genreTmdbId);
 }

@@ -46,4 +46,18 @@ public class MovieApplicationServiceImpl implements MovieApplicationService {
     {
         return (value == null || value.isBlank() ? null : LocalDate.parse(value));
     }
+
+    @Override
+    public List<DisplayMovieResponseDto> findByGenre(Integer genreTmdbId) {
+        return tmdbClient.discoverByGenre(genreTmdbId).stream()
+                .map(result -> new DisplayMovieResponseDto(
+                        null,
+                        result.id(),
+                        result.title(),
+                        result.posterPath(),
+                        parseDate(result.releaseDate()),
+                        result.voteAverage()
+                ))
+                .toList();
+    }
 }

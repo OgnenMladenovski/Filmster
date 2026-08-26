@@ -1,8 +1,6 @@
 package org.mk.ukim.finki.nvd.movierecommendationapp.client;
 
-import org.mk.ukim.finki.nvd.movierecommendationapp.client.dto.TmdbMovieResponse;
-import org.mk.ukim.finki.nvd.movierecommendationapp.client.dto.TmdbSearchResponse;
-import org.mk.ukim.finki.nvd.movierecommendationapp.client.dto.TmdbSearchResult;
+import org.mk.ukim.finki.nvd.movierecommendationapp.client.dto.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -67,6 +65,37 @@ public class TmdbClient {
                 return List.of();
         }
 
+        return response.results();
+    }
+
+    public List<TmdbCastMember> fetchCast(Integer tmdbId){
+        TmdbCreditsResponse response = restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/movie/{id}/credits")
+                        .queryParam("api_key", apiKey)
+                        .build(tmdbId))
+                .retrieve()
+                .body(TmdbCreditsResponse.class);
+
+        if ((response == null) || response.cast() == null){
+            return List.of();
+        }
+        return response.cast();
+    }
+
+    public List<TmdbSearchResult> discoverByGenre(Integer genreTmdbId) {
+        TmdbSearchResponse response = restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/discover/movie")
+                        .queryParam("api_key", apiKey)
+                        .queryParam("with_genres", genreTmdbId)
+                        .build())
+                .retrieve()
+                .body(TmdbSearchResponse.class);
+
+        if (response == null || response.results() == null) {
+            return List.of();
+        }
         return response.results();
     }
 }

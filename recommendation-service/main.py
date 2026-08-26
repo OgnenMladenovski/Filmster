@@ -8,6 +8,11 @@ app = FastAPI()
 def health():
     return {"status": "ok"}
 
+# @app.post("/recommend", response_model=RecommendationResponse)
+# def recommend(request: RecommendationRequest):
+#     return get_recommendations(request.favorites, request.candidates, request.limit)
+
 @app.post("/recommend", response_model=RecommendationResponse)
 def recommend(request: RecommendationRequest):
+    print("FAVORITES RECEIVED:", request.favorites)
     return get_recommendations(request.favorites, request.candidates, request.limit)
