@@ -26,4 +26,9 @@ public class MovieController {
     public ResponseEntity<DisplayMovieDetailsResponseDto> findByTmdbId(@PathVariable Integer tmdbId) {
         return ResponseEntity.ok(movieApplicationService.findByTmdbId(tmdbId));
     }
+
+    @GetMapping("/genre/{genreTmdbId}")
+    public ResponseEntity<List<DisplayMovieResponseDto>> findByGenre(@PathVariable Integer genreTmdbId) {
+        return ResponseEntity.ok(movieApplicationService.findByGenre(genreTmdbId));
+    }
 }

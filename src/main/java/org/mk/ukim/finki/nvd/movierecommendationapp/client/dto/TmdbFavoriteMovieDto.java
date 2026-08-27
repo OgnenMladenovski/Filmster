@@ -7,7 +7,8 @@ import java.util.List;
 public record TmdbFavoriteMovieDto(
         @JsonProperty("tmdb_id") Integer tmdbId,
         String title,
-        List<String> genres
+        List<String> genres,
+        List<String> cast
 ) {
 
 }

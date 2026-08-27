@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.mk.ukim.finki.nvd.movierecommendationapp.client.RecommendationServiceClient;
 import org.mk.ukim.finki.nvd.movierecommendationapp.client.TmdbClient;
 import org.mk.ukim.finki.nvd.movierecommendationapp.client.dto.*;
-import org.mk.ukim.finki.nvd.movierecommendationapp.model.domain.FavoriteMovie;
-import org.mk.ukim.finki.nvd.movierecommendationapp.model.domain.Movie;
-import org.mk.ukim.finki.nvd.movierecommendationapp.model.domain.Recommendation;
-import org.mk.ukim.finki.nvd.movierecommendationapp.model.domain.User;
+import org.mk.ukim.finki.nvd.movierecommendationapp.model.domain.*;
 import org.mk.ukim.finki.nvd.movierecommendationapp.model.exception.NotEnoughFavoriteMoviesException;
 import org.mk.ukim.finki.nvd.movierecommendationapp.repository.RecommendationRepository;
 import org.mk.ukim.finki.nvd.movierecommendationapp.service.domain.FavoriteMovieService;
@@ -56,7 +53,18 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .collect(Collectors.toSet());
         poolByImdbId.keySet().removeAll(favoriteTmdbIds);
 
-        List<TmdbSearchResult> pool = new ArrayList<>(poolByImdbId.values());
+        Set<Integer> favoriteGenreIds = favorites.stream()
+                .flatMap(favorite ->
+                        favorite.getMovie().getGenres().stream())
+                .map(Genre::getTmdbId)
+                .collect(Collectors.toSet());
+
+        List<TmdbSearchResult> pool = poolByImdbId.values().stream()
+                .sorted(Comparator.comparingInt((TmdbSearchResult result) ->
+                        (int) result.genre_ids().stream()
+                                .filter(favoriteGenreIds::contains).count()).reversed())
+                .limit(50)
+                .toList();
 
         List<TmdbFavoriteMovieDto> favoriteMovieDtos = favorites.stream()
                 .map(favorite -> new TmdbFavoriteMovieDto(
@@ -64,7 +72,12 @@ public class RecommendationServiceImpl implements RecommendationService {
                         favorite.getMovie().getTitle(),
                         favorite.getMovie().getGenres().stream()
                                 .map(genre -> genre.getName())
-                                .collect(Collectors.toList())
+                                .collect(Collectors.toList()),
+                        tmdbClient.fetchCast(favorite.getMovie().getTmdbId())
+                                .stream()
+                                .map(TmdbCastMember::name)
+                                .limit(5)
+                                .toList()
                 )).toList();
 
 

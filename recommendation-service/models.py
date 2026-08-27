@@ -5,6 +5,7 @@ class FavoriteMovie(BaseModel):
     tmdb_id: int
     title: str
     genres: List[str]
+    cast: List[str]
 
 class CandidateMovie(BaseModel):
     tmdb_id: int
