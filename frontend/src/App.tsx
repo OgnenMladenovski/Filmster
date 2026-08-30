@@ -108,14 +108,35 @@ function App() {
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
             {token ? (
               <>
-                <button
-                  onClick={() => selectTab("profile")}
-                  className={`icon-button ${tab === "profile" && openMovieId === null ? "active" : ""}`}
-                  title="Profile"
-                >
-                  👤
-                </button>
-                <button onClick={handleLogout} style={{ padding: "6px 12px", fontSize: 13 }}>
+                  <button
+                      onClick={() => selectTab("profile")}
+                      title="Profile"
+                      style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 8,
+                          padding: "7px 14px",
+                          borderRadius: 8,
+                          fontSize: 13,
+                          fontWeight: 600,
+                          background: tab === "profile" && openMovieId === null ? "var(--accent-contrast)" : "var(--accent)",
+                          color: tab === "profile" && openMovieId === null ? "var(--accent)" : "var(--accent-contrast)",
+                          border: tab === "profile" && openMovieId === null ? "1px solid var(--accent)" : "1px solid var(--accent-dim)",
+                      }}
+                  >
+                    <span
+                        style={{
+                            width: 16,
+                            height: 16,
+                            display: "block",
+                            background: "currentColor",
+                            WebkitMask: "url(/my-profile.svg) center / contain no-repeat",
+                            mask: "url(/my-profile.svg) center / contain no-repeat",
+                        }}
+                    />
+                      My Profile
+                  </button>
+                <button onClick={handleLogout} style={{ padding: "6px 12px", fontSize: 13, border: "1px solid var(--accent)", fontWeight: "bold" }}>
                   Log out
                 </button>
               </>
