@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { api, ApiError } from "../api";
+import recommendationApi from "../api/recommendationApi";
+import favoriteApi from "../api/favoriteApi";
+import watchlistApi from "../api/watchlistApi";
+import { getErrorMessage } from "../api/getErrorMessage";
 import type { Recommendation, FavoriteMovie } from "../types";
 import { EmptyState } from "../components/EmptyState";
 
@@ -25,15 +28,19 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [step, setStep] = useState(0);
+  const [watchlistIds, setWatchlistIds] = useState<Set<number>>(new Set());
 
-  useEffect(() => {
-    api
-      .getRecommendations(token)
-      .then(setRecommendations)
-      .catch((err) => setError(err instanceof ApiError ? err.message : "Something went wrong"))
-      .finally(() => setLoaded(true));
-    api.getFavorites(token).then(setFavorites).catch(() => setFavorites([]));
-  }, [token]);
+    useEffect(() => {
+        recommendationApi
+            .getMy()
+            .then((res) => setRecommendations(res.data))
+            .catch((err) => setError(getErrorMessage(err)))
+            .finally(() => setLoaded(true));
+        favoriteApi.getMy().then((res) => setFavorites(res.data)).catch(() => setFavorites([]));
+        watchlistApi.getMy()
+            .then((res) => setWatchlistIds(new Set(res.data.map((w) => w.movie.tmdbId))))
+            .catch(() => {});
+    }, [token]);
 
   useEffect(() => {
     if (!loading) {
@@ -49,11 +56,11 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
     setNotice(null);
     setLoading(true);
     try {
-      const data = await api.generateRecommendations(token);
+      const data = (await recommendationApi.generate()).data;
       setRecommendations(data);
       setNotice(`Generated ${data.length} fresh pick${data.length === 1 ? "" : "s"}.`);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Something went wrong");
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -63,10 +70,11 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
     setError(null);
     setNotice(null);
     try {
-      await api.addToWatchlist(token, tmdbId);
-      setNotice(`Added "${title}" to watchlist.`);
+      await watchlistApi.add(tmdbId);
+        setWatchlistIds((prev) => new Set(prev).add(tmdbId));
+        setNotice(`Added "${title}" to watchlist.`);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Something went wrong");
+      setError(getErrorMessage(err));
     }
   }
 
@@ -76,69 +84,70 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
   return (
     <div>
       <div style={{ marginBottom: 8 }}>
-        <h2 style={{ fontSize: 26 }}>For You</h2>
-        <p style={{ color: "var(--text-muted)", fontSize: 14, marginTop: 6, maxWidth: 620, lineHeight: 1.6 }}>
-          We take your five favorites, pull films TMDB considers similar, then let an AI rank that real
-          shortlist — so every pick exists, and every pick comes with a reason.
+        <h2 style={{ fontSize: 26, color: "var(--accent)" }}>For You</h2>
+        <p style={{ color: "var(--text-muted)", fontSize: 14, marginTop: 6, lineHeight: 1.6 }}>
+          We take your five favorites and your rated movies, then we pull films TMDB considers similar and let an AI prediction model rank a 5 movie shortlist so that every pick comes with a reason, based on your taste.
         </p>
       </div>
 
-      {hasFiveFavorites && favorites.length > 0 && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 14,
-            flexWrap: "wrap",
-            padding: "14px 16px",
-            border: "1px solid var(--border)",
-            borderRadius: 10,
-            background: "var(--bg-elevated)",
-            margin: "22px 0",
-          }}
-        >
-          <span style={{ fontSize: 12, color: "var(--text-faint)", letterSpacing: "0.04em" }}>BASED ON</span>
-          <div style={{ display: "flex", gap: 8 }}>
-            {favorites.map((fav) => (
-              <img
-                key={fav.id}
-                src={
-                  fav.movie.posterPath
-                    ? `https://image.tmdb.org/t/p/w92${fav.movie.posterPath}`
-                    : undefined
-                }
-                alt={fav.movie.title}
-                title={fav.movie.title}
-                onClick={() => onOpenMovie(fav.movie.tmdbId)}
+        {hasFiveFavorites && favorites.length > 0 && (
+            <div
                 style={{
-                  width: 38,
-                  height: 57,
-                  objectFit: "cover",
-                  borderRadius: 4,
-                  cursor: "pointer",
-                  background: "var(--bg-hover)",
-                  border: "1px solid var(--border)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 16,
+                    padding: "24px 16px",
+                    border: "1px solid var(--border)",
+                    background: "var(--bg-elevated)",
+                    margin: "22px 0",
                 }}
-              />
-            ))}
-          </div>
-          <button
-            className="primary"
-            onClick={handleGenerate}
-            disabled={loading}
-            style={{ marginLeft: "auto" }}
+            >
+          <span
+              style={{
+                  fontSize: 12,
+                  color: "var(--accent)",
+                  letterSpacing: "0.09em",
+                  textTransform: "uppercase",
+                  fontWeight: 600,
+              }}
           >
-            {loading ? "Generating…" : recommendations.length > 0 ? "Regenerate" : "Generate Recommendations"}
-          </button>
-        </div>
-      )}
+            Based on your favorites
+          </span>
+
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+                    {favorites.map((fav) => (
+                        <img
+                            key={fav.id}
+                            src={fav.movie.posterPath ? `https://image.tmdb.org/t/p/w154${fav.movie.posterPath}` : undefined}
+                            alt={fav.movie.title}
+                            title={fav.movie.title}
+                            onClick={() => onOpenMovie(fav.movie.tmdbId)}
+                            style={{
+                                width: 100,
+                                height: 150,
+                                objectFit: "cover",
+                                cursor: "pointer",
+                                background: "var(--bg-hover)",
+                                border: "1px solid var(--border)",
+                                borderRadius: 15
+                            }}
+                        />
+                    ))}
+                </div>
+
+                <button className="primary" onClick={handleGenerate} disabled={loading}>
+                    {loading ? "Generating…" : recommendations.length > 0 ? "Regenerate" : "Generate Recommendations"}
+                </button>
+            </div>
+        )}
 
       {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
       {notice && <p style={{ color: "var(--accent)" }}>{notice}</p>}
 
       {loaded && !hasFiveFavorites && (
         <EmptyState
-          icon="🔒"
+          icon="X"
           title="Pick five favorites first"
           text={`Recommendations are built from exactly five favorite films. You currently have ${favorites.length} of 5.`}
           actionLabel="Go to Favorites"
@@ -159,7 +168,7 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
           <div className="pulse-dot" style={{ margin: "0 auto 18px" }} />
           <p style={{ fontWeight: 600, marginBottom: 6 }}>{GENERATING_STEPS[step]}</p>
           <p style={{ color: "var(--text-faint)", fontSize: 13 }}>
-            This runs a local AI model — it usually takes 15–40 seconds.
+            This runs a local AI model and it usually takes 15–40 seconds.
           </p>
         </div>
       )}
@@ -168,13 +177,13 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
         <EmptyState
           icon="✦"
           title="No recommendations yet"
-          text="You've got your five favorites locked in. Generate your first set of picks — each one comes with an explanation of why it fits."
+          text="You've got your five favorites locked in. Generate your first set of picks, each one comes with an explanation of why it fits."
           actionLabel="Generate Recommendations"
           onAction={handleGenerate}
         />
       )}
 
-      {!loading && top && (
+      {!loading && hasFiveFavorites && top && (
         <>
           <div
             onClick={() => onOpenMovie(top.movie.tmdbId)}
@@ -196,7 +205,7 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
               <img
                 src={`https://image.tmdb.org/t/p/w342${top.movie.posterPath}`}
                 alt={top.movie.title}
-                style={{ width: 132, borderRadius: 8, flexShrink: 0, boxShadow: "0 10px 26px rgba(0,0,0,0.5)" }}
+                style={{ width: 180, borderRadius: 8, flexShrink: 0, alignSelf: "flex-start", boxShadow: "0 10px 26px rgba(0,0,0,0.5)" }}
               />
             )}
             <div style={{ flex: 1, minWidth: 240 }}>
@@ -219,7 +228,7 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
               <div style={{ display: "flex", gap: 10, color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
                 {top.movie.releaseDate && <span>{top.movie.releaseDate.slice(0, 4)}</span>}
                 {top.movie.tmdbRating != null && (
-                  <span style={{ color: "var(--star)" }}>★ {top.movie.tmdbRating.toFixed(1)}</span>
+                  <span style={{ color: "var(--star)" }}>★ {(top.movie.tmdbRating/2).toFixed(1)}</span>
                 )}
               </div>
               <p
@@ -229,7 +238,6 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
                   lineHeight: 1.65,
                   borderLeft: "3px solid var(--accent)",
                   paddingLeft: 14,
-                  maxWidth: 620,
                 }}
               >
                 {top.reason}
@@ -239,9 +247,10 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
                   e.stopPropagation();
                   handleAddWatchlist(top.movie.tmdbId, top.movie.title);
                 }}
+                disabled={watchlistIds.has(top.movie.tmdbId)}
                 style={{ marginTop: 16 }}
               >
-                + Add to Watchlist
+                  {watchlistIds.has(top.movie.tmdbId) ? "✓ On Watchlist" : "+ Add to Watchlist"}
               </button>
             </div>
           </div>
@@ -292,7 +301,7 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
                     )}
                     {rec.movie.tmdbRating != null && (
                       <span style={{ color: "var(--star)", fontSize: 13 }}>
-                        ★ {rec.movie.tmdbRating.toFixed(1)}
+                        ★ {(rec.movie.tmdbRating/2).toFixed(1)}
                       </span>
                     )}
                   </div>
@@ -305,10 +314,11 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
                     e.stopPropagation();
                     handleAddWatchlist(rec.movie.tmdbId, rec.movie.title);
                   }}
-                  title="Add to watchlist"
+                  disabled={watchlistIds.has(rec.movie.tmdbId)}
+                  title={watchlistIds.has(rec.movie.tmdbId) ? "On watchlist" : "Add to watchlist"}
                   style={{ alignSelf: "flex-start", flexShrink: 0, padding: "5px 11px" }}
                 >
-                  +
+                    {watchlistIds.has(rec.movie.tmdbId) ? "✓" : "+"}
                 </button>
               </div>
             ))}

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
-
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,13 +49,16 @@ public class TmdbClient {
         {
             return  List.of();
         }
-        return response.results();
+
+        return response.results().stream()
+                .filter(this::hasPosterAndRating)
+                .toList();
     }
 
     public List<TmdbSearchResult> fetchSimilar(Integer tmdbId){
         TmdbSearchResponse response = restClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/movie/{id}/similar")
+                        .path("/movie/{id}/recommendations")
                         .queryParam("api_key", apiKey)
                         .build(tmdbId))
                 .retrieve()
@@ -65,7 +68,9 @@ public class TmdbClient {
                 return List.of();
         }
 
-        return response.results();
+        return response.results().stream()
+                .filter(this::hasPosterAndRating)
+                .toList();
     }
 
     public List<TmdbCastMember> fetchCast(Integer tmdbId){
@@ -96,6 +101,15 @@ public class TmdbClient {
         if (response == null || response.results() == null) {
             return List.of();
         }
-        return response.results();
+        return response.results().stream()
+                .filter(this::hasPosterAndRating)
+                .toList();
+    }
+
+    private boolean hasPosterAndRating(TmdbSearchResult result) {
+        return result.posterPath() != null
+                && !result.posterPath().isBlank()
+                && result.voteAverage() != null
+                && result.voteAverage().signum() > 0;
     }
 }

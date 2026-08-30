@@ -15,17 +15,13 @@ export function Footer() {
           margin: "0 auto",
           display: "flex",
           flexWrap: "wrap",
-          justifyContent: "space-between",
+          justifyContent: "center",
           alignItems: "center",
           gap: 12,
         }}
       >
         <span>
-          🎬 <span style={{ color: "var(--accent)", fontWeight: 700 }}>Reel</span>ist — track films, rate what you
-          watch, discover what's next.
-        </span>
-        <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          This product uses the TMDB API but is not endorsed or certified by TMDB.
+            <span className="brand-mark"></span><span style={{padding: 10}}><span style={{ color: "var(--accent)" }}>Filmster</span> is your app to track films, rate what you watch and discover what's next.</span>
         </span>
       </div>
     </footer>

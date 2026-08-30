@@ -13,9 +13,15 @@ class CandidateMovie(BaseModel):
     overview: str
     rating: Optional[float] = None
 
+class RatedMovie(BaseModel):
+    tmdb_id: int
+    title: str
+    score: float
+
 class RecommendationRequest(BaseModel):
     favorites: List[FavoriteMovie]
     candidates: List[CandidateMovie]
+    ratings: List[RatedMovie] = []
     limit: int = 10
 
 class RecommendationItem(BaseModel):

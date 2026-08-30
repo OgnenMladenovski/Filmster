@@ -48,6 +48,7 @@ function App() {
       return;
     }
     setOpenMovieId(null);
+    setBrowseQuery(undefined);
     setTab(key);
   }
 
@@ -80,9 +81,9 @@ function App() {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "clamp(14px, 4vw, 34px)", minWidth: 0 }}>
-            <span className="brand" onClick={() => selectTab("home")}>
-              <span className="brand-mark">▶</span>
-              Reelist
+            <span style={{ color: "var(--accent)" }} className="brand" onClick={() => selectTab("home")}>
+                <span className="brand-mark" onClick={() => selectTab("home")}></span>
+              Filmster
             </span>
             <nav
               style={{
@@ -153,6 +154,7 @@ function App() {
                 onOpenMovie={setOpenMovieId}
                 initialQuery={browseQuery}
                 onRequireAuth={requireAuth}
+                onSearched={setBrowseQuery}
               />
             )}
             {tab === "favorites" && token && (

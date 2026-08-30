@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../api";
+import movieApi from "../api/movieApi";
 import type { MovieDetails } from "../types";
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
   onSearch: (query: string) => void;
 }
 
-const FEATURED_GENRE_TMDB_ID = 28; // Action
+const FEATURED_GENRE_TMDB_ID = 28;
 
 export function Hero({ token, onOpenMovie, onSearch }: Props) {
   const [featured, setFeatured] = useState<MovieDetails | null>(null);
@@ -16,15 +16,16 @@ export function Hero({ token, onOpenMovie, onSearch }: Props) {
 
   useEffect(() => {
     let cancelled = false;
-    api
-      .getMoviesByGenre(token, FEATURED_GENRE_TMDB_ID)
-      .then((movies) => {
+      movieApi
+      .getByGenre(FEATURED_GENRE_TMDB_ID)
+      .then((res) => {
+        const movies = res.data;
         const candidate = movies.find((m) => m.posterPath) ?? movies[0];
         if (!candidate) return null;
-        return api.getMovie(token, candidate.tmdbId);
+        return movieApi.getById(candidate.tmdbId);
       })
-      .then((details) => {
-        if (!cancelled && details) setFeatured(details);
+      .then((res) => {
+        if (!cancelled && res) setFeatured(res.data);
       })
       .catch(() => {});
     return () => {
@@ -45,7 +46,6 @@ export function Hero({ token, onOpenMovie, onSearch }: Props) {
     <section
       style={{
         position: "relative",
-        borderRadius: 12,
         overflow: "hidden",
         border: "1px solid var(--border)",
         marginBottom: 48,
@@ -59,12 +59,11 @@ export function Hero({ token, onOpenMovie, onSearch }: Props) {
       }}
     >
       <div style={{ position: "relative", zIndex: 1, padding: "clamp(28px, 6vw, 48px)", maxWidth: 620 }}>
-        <h1 style={{ fontSize: "clamp(26px, 5vw, 42px)", lineHeight: 1.1, marginBottom: 12 }}>
-          Track films. Find your next favorite.
+        <h1 style={{ fontSize: "clamp(26px, 5vw, 42px)", lineHeight: 1.1, marginBottom: 12, color: "var(--accent)" }}>
+          Track films and find your next favorite.
         </h1>
         <p style={{ color: "var(--text-muted)", fontSize: 16, marginBottom: 24, lineHeight: 1.55 }}>
-          Rate what you've watched, build your watchlist, and let AI recommend what to watch next — with a reason
-          for every pick.
+          Rate what you've watched, build your watchlist, and let an AI model recommend what to watch next, with a reason for every pick.
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20 }}>
@@ -95,7 +94,7 @@ export function Hero({ token, onOpenMovie, onSearch }: Props) {
             >
               {featured.title}
               {featured.tmdbRating != null && (
-                <span style={{ color: "var(--star)", marginLeft: 8 }}>★ {featured.tmdbRating.toFixed(1)}</span>
+                <span style={{ color: "var(--star)", marginLeft: 8 }}>★ {(featured.tmdbRating/2).toFixed(1)}</span>
               )}
             </button>
           </div>

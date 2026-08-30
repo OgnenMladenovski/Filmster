@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { api, ApiError } from "../api";
+import favoriteApi from "../api/favoriteApi";
+import { getErrorMessage } from "../api/getErrorMessage";
 import type { FavoriteMovie } from "../types";
 import { PosterTile } from "../components/PosterTile";
 import { EmptyState } from "../components/EmptyState";
@@ -10,7 +11,7 @@ interface Props {
   onGoToBrowse: () => void;
 }
 
-export function Favorites({ token, onOpenMovie, onGoToBrowse }: Props) {
+export function Favorites({ onOpenMovie, onGoToBrowse }: Props) {
   const [favorites, setFavorites] = useState<FavoriteMovie[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -18,9 +19,9 @@ export function Favorites({ token, onOpenMovie, onGoToBrowse }: Props) {
   async function load() {
     setError(null);
     try {
-      setFavorites(await api.getFavorites(token));
+      setFavorites((await favoriteApi.getMy()).data);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Something went wrong");
+      setError(getErrorMessage(err));
     } finally {
       setLoaded(true);
     }
@@ -28,16 +29,15 @@ export function Favorites({ token, onOpenMovie, onGoToBrowse }: Props) {
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleRemove(tmdbId: number) {
     setError(null);
     try {
-      await api.removeFavorite(token, tmdbId);
+      await favoriteApi.remove(tmdbId);
       await load();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Something went wrong");
+      setError(getErrorMessage(err));
     }
   }
 
@@ -45,9 +45,9 @@ export function Favorites({ token, onOpenMovie, onGoToBrowse }: Props) {
 
   return (
     <div>
-      <h2 style={{ fontSize: 24 }}>Favorites</h2>
+      <h2 style={{ fontSize: 24, color: "var(--accent)" }}>Favorites</h2>
       <p style={{ color: "var(--text-muted)", fontSize: 14, margin: "6px 0 18px" }}>
-        Your five all-time favorites — the seed for every recommendation we generate.
+        Your five all-time favorites, the seed we need for every recommendation we generate.
       </p>
 
       <div
@@ -60,11 +60,11 @@ export function Favorites({ token, onOpenMovie, onGoToBrowse }: Props) {
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
-          <span style={{ fontWeight: 600, fontSize: 14 }}>
-            {favorites.length} of 5 selected
-          </span>
-          <span style={{ fontSize: 13, color: complete ? "var(--accent)" : "var(--text-faint)" }}>
-            {complete ? "✓ Recommendations unlocked" : `${5 - favorites.length} more to unlock recommendations`}
+            <span style={{ fontWeight: 600, fontSize: 14, color: complete ? "var(--accent)" : undefined }}>
+                {favorites.length} of 5 selected
+            </span>
+          <span style={{ fontSize: 16, color: complete ? "var(--accent)" : "var(--text-faint)" }}>
+            {complete ? "Recommendations unlocked" : `You need ${5 - favorites.length} more to unlock recommendations`}
           </span>
         </div>
         <div style={{ display: "flex", gap: 6 }}>
@@ -87,9 +87,9 @@ export function Favorites({ token, onOpenMovie, onGoToBrowse }: Props) {
 
       {loaded && favorites.length === 0 ? (
         <EmptyState
-          icon="♥"
+          icon="X"
           title="No favorites yet"
-          text="Pick exactly five films you love most. They tell the recommendation engine what your taste actually looks like."
+          text="Pick exactly five films you love most. They tell the recommendation model what your taste actually looks like."
           actionLabel="Find films to add"
           onAction={onGoToBrowse}
         />

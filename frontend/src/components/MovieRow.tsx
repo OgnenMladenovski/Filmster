@@ -31,8 +31,8 @@ export function MovieRow({
   }
 
   return (
-    <section style={{ marginBottom: 40 }}>
-      <h2 style={{ fontSize: 19, marginBottom: 14 }}>{title}</h2>
+    <section style={{ marginBottom: -25 }}>
+      <h2 style={{ fontSize: 19, marginBottom: 14, color: "var(--accent)" }}>{title}</h2>
       {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
       {loading && <PosterSkeleton count={7} />}
       {!loading && !error && movies.length === 0 && (

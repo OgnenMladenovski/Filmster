@@ -11,6 +11,7 @@ import org.mk.ukim.finki.nvd.movierecommendationapp.repository.RecommendationRep
 import org.mk.ukim.finki.nvd.movierecommendationapp.service.domain.FavoriteMovieService;
 import org.mk.ukim.finki.nvd.movierecommendationapp.service.domain.MovieService;
 import org.mk.ukim.finki.nvd.movierecommendationapp.service.domain.RecommendationService;
+import org.mk.ukim.finki.nvd.movierecommendationapp.service.domain.RatingService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -26,6 +27,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final TmdbClient tmdbClient;
     private final RecommendationServiceClient recommendationServiceClient;
     private final MovieService movieService;
+    private final RatingService ratingService;
 
     @Override
     public List<Recommendation> findAllByUser(User user) {
@@ -60,6 +62,8 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .collect(Collectors.toSet());
 
         List<TmdbSearchResult> pool = poolByImdbId.values().stream()
+                .filter(result -> result.voteAverage() != null
+                        && result.voteAverage().doubleValue() >= 7.0)
                 .sorted(Comparator.comparingInt((TmdbSearchResult result) ->
                         (int) result.genre_ids().stream()
                                 .filter(favoriteGenreIds::contains).count()).reversed())
@@ -89,7 +93,14 @@ public class RecommendationServiceImpl implements RecommendationService {
                         result.voteAverage() != null ? result.voteAverage().doubleValue() : null
                 )).toList();
 
-        TmdbRecommendationRequest request = new TmdbRecommendationRequest(favoriteMovieDtos, candidateDtos, 10);
+        List<TmdbRatedMovieDto> ratedMovieDtos = ratingService.findAllByUser(user).stream()
+                .map(rating -> new TmdbRatedMovieDto(
+                        rating.getMovie().getTmdbId(),
+                        rating.getMovie().getTitle(),
+                        rating.getScore() != null ? rating.getScore().doubleValue() : null
+                )).toList();
+
+        TmdbRecommendationRequest request = new TmdbRecommendationRequest(favoriteMovieDtos, candidateDtos, ratedMovieDtos, 5);
 
         List<TmdbRecommendationItemDto> recommendationItems;
 
@@ -98,18 +109,27 @@ public class RecommendationServiceImpl implements RecommendationService {
             recommendationItems = recommendationResponse.recommendations();
         } catch (Exception exception){
             log.warn("Recommendation service unavailable, falling back to top-rated candidates", exception);
-            recommendationItems = buildFallbackRecommendations(pool, 10);
+            recommendationItems = buildFallbackRecommendations(pool, 5);
         }
 
         List<Recommendation> newRecommendations = new ArrayList<>();
+        Set<Integer> addedTmdbIds = new HashSet<>();
         for (TmdbRecommendationItemDto item : recommendationItems){
+            if (newRecommendations.size() >= 5){
+                break;
+            }
             if (!poolByImdbId.containsKey(item.tmdbId())){
                 continue;
             }
+            if (!addedTmdbIds.add(item.tmdbId())){
+                continue;
+            }
             Movie movie = movieService.findOrCreateByTmdbId(item.tmdbId());
+            if (movie.getTmdbRating() == null || movie.getTmdbRating().doubleValue() < 7.0){
+                continue;
+            }
             newRecommendations.add(new Recommendation(user, movie, item.rank(), item.reason()));
         }
-
 
         recommendationRepository.deleteAllByUser(user);
         recommendationRepository.flush();

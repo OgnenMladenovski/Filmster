@@ -10,4 +10,4 @@ def health():
 
 @app.post("/recommend", response_model=RecommendationResponse)
 def recommend(request: RecommendationRequest):
-    return get_recommendations(request.favorites, request.candidates, request.limit)
+    return get_recommendations(request.favorites, request.candidates, request.ratings, request.limit)

@@ -14,6 +14,7 @@ export function EmptyState({ icon, title, text, actionLabel, onAction }: Props) 
         borderRadius: 10,
         padding: "48px 24px",
         textAlign: "center",
+          color: "var(--accent)"
       }}
     >
       <div style={{ fontSize: 40, marginBottom: 12 }}>{icon}</div>

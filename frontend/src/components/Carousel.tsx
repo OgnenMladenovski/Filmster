@@ -41,7 +41,7 @@ export function Carousel({ children }: Props) {
       <div
         ref={scrollRef}
         onScroll={updateArrows}
-        style={{ display: "flex", gap: 16, overflowX: "auto", paddingBottom: 12, scrollbarWidth: "none" }}
+        style={{ display: "flex", gap: 16, overflowX: "auto", paddingBottom: 12, scrollbarWidth: "none", justifyContent: "safe center" }}
       >
         {children}
       </div>
