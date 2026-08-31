@@ -6,7 +6,7 @@
 
 ## Overview
 
-A Letterboxd inspired movie rating web application. Users authenticate with JWT, search through the TMDB catalogue or browse by genre, open detailed pages about the film, rate what they have watched (0–5 stars with reviews), build a watchlist (To-do list of movies to watch), and pick exactly five all-time favorites. Those five favorites, together with the user's own ratings, feed a local-AI recommendation model that ranks a shortlist of five picks, each with a written reason explaining the connection to the user's taste.
+A Letterboxd inspired movie rating web application. Users authenticate with JWT, search through the TMDB catalogue or browse by genre, open detailed pages about the film, rate what they have watched, build a watchlist and pick their 5 all-time favorite movies. Those five favorites, together with the user's own ratings, feed a local AI recommendation model that ranks a shortlist of 5 picks, each with a written reason explaining the connection to the user's taste.
 
 ---
 
@@ -17,7 +17,7 @@ A Letterboxd inspired movie rating web application. Users authenticate with JWT,
 - **Ratings & Reviews** — Rate any film 0–5 with a half-star picker and an optional review.
 - **Favorites** — Pick 5 of your all-time favorite movies, which unlock the recommendation model.
 - **Watchlist** — Build a list of movies to watch later.
-- **AI Recommendations ("For You")** — Five ranked picks, each with a 3–4 sentence reason tied to your favorites and ratings.
+- **AI Recommendations ("For You")** — 5 ranked picks, each with a 3-4 sentence reason tied to your favorites and ratings.
 - **Profile** — User stats, rating-distribution bar chart, your top five, and a full rating history.
 
 ---
