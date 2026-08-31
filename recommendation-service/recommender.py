@@ -1,5 +1,5 @@
 from langchain_ollama import ChatOllama
-from models import RecommendationResponse, FavoriteMovie, CandidateMovie
+from models import RecommendationResponse, FavoriteMovie, CandidateMovie, RatedMovie
 from prompts import build_prompt
 
 llm = ChatOllama(model="llama3.2:3b", temperature=0.2, num_ctx=8192, num_predict=2048)
