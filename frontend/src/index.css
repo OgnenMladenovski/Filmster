@@ -1,8 +1,9 @@
 :root {
     --bg: #0e1013;
-    --bg-elevated: #16191f;
+    /*--bg-elevated: #16191f;*/
+    --background: "linear-gradient(160deg, #2a1420 0%, var(--bg-elevated) 70%)";
     --bg-hover: #212630;
-    --border: #282e38;
+    --border: #332c1f;
     --text: #e9e7e4;
     --text-muted: #9b9691;
     --text-faint: #6a6660;
@@ -18,7 +19,8 @@
     --radius: 6px;
 
     color-scheme: dark;
-    font-family: "Space Mono", "Courier New", monospace;
+    /*font-family: "Space Mono", "Courier New", monospace;*/
+    font-family: "Inter", system-ui, sans-serif;
 }
 
 * {
@@ -35,10 +37,16 @@ body {
     min-height: 100vh;
 }
 
+/*h1, h2, h3 {*/
+/*    font-weight: 700;*/
+/*    letter-spacing: -0.01em;*/
+/*    margin: 0;*/
+/*}*/
+
 h1, h2, h3 {
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    margin: 0;
+    font-family: "Bebas Neue", "Inter", sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.02em;
 }
 
 a {
@@ -50,7 +58,7 @@ button {
     font: inherit;
     color: inherit;
     background: var(--bg-elevated);
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border);
     border-radius: var(--radius);
     padding: 8px 14px;
     transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
@@ -81,7 +89,7 @@ button.primary:hover:not(:disabled) {
 input, select, textarea {
     font: inherit;
     background: var(--bg-elevated);
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border);
     border-radius: var(--radius);
     color: var(--text);
     padding: 8px 10px;
@@ -105,7 +113,7 @@ input:focus, select:focus, textarea:focus {
     background: rgba(14, 16, 19, 0.82);
     backdrop-filter: saturate(140%) blur(12px);
     -webkit-backdrop-filter: saturate(140%) blur(12px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1.5px solid var(--border);
 }
 
 .brand {
@@ -207,6 +215,11 @@ input:focus, select:focus, textarea:focus {
     opacity: 1;
 }
 
+.no-hover-lift .poster-tile:hover {
+    transform: none;
+    box-shadow: none;
+}
+
 .skeleton {
     background: linear-gradient(100deg, var(--bg-elevated) 30%, var(--bg-hover) 50%, var(--bg-elevated) 70%);
     background-size: 200% 100%;
@@ -271,7 +284,7 @@ input:focus, select:focus, textarea:focus {
     align-items: center;
     justify-content: center;
     background: rgba(14, 16, 19, 0.88);
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border);
     border-radius: 6px;
     color: var(--text);
     font-size: 18px;

@@ -131,7 +131,7 @@ export function Browse({ token, onOpenMovie, initialQuery, onRequireAuth, onSear
         <div>
             <div style={{ ...overlineStyle, color: "var(--accent)", marginBottom: 6, fontSize: 24 }}>Films</div>
             <p style={{ color: "var(--text-muted)", fontSize: 14, margin: "0 0 20px" }}>
-                Search the full TMDB catalogue, or browse by genre.
+                Search the full TMDB catalogue or browse by genre.
             </p>
 
             <form onSubmit={handleSearch} style={{ display: "flex", gap: 8, marginBottom: 22 }}>
@@ -154,7 +154,7 @@ export function Browse({ token, onOpenMovie, initialQuery, onRequireAuth, onSear
                     justifyContent: "center",
                     marginBottom: 24,
                     paddingBottom: 18,
-                    borderBottom: "1px solid var(--border)",
+                    borderBottom: "1.5px solid var(--border)",
                 }}
             >
                 {genres.map((g) => {

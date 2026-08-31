@@ -17,7 +17,7 @@ interface Props {
 }
 
 const panelStyle: CSSProperties = {
-    border: "1px solid var(--border)",
+    border: "1.5px solid var(--border)",
     background: "var(--bg-elevated)",
 };
 
@@ -159,14 +159,14 @@ export function MovieDetail({ token, tmdbId, onBack, onRequireAuth }: Props) {
                                     <img
                                         src={`https://image.tmdb.org/t/p/w500${movie.posterPath}`}
                                         alt={movie.title}
-                                        style={{ width: "100%", borderRadius: 12, boxShadow: "0 16px 40px rgba(0,0,0,0.65)" }}
+                                        style={{ width: "100%", boxShadow: "0 16px 40px rgba(0,0,0,0.65)" }}
                                     />
                                 ) : (
-                                    <div style={{ width: "100%", aspectRatio: "2/3", background: "var(--bg-elevated)", borderRadius: 12 }} />
+                                    <div style={{ width: "100%", aspectRatio: "2/3", background: "var(--bg-elevated)" }} />
                                 )}
 
                                 {token && (
-                                    <div style={{ ...panelStyle, marginTop: 14, borderRadius: 14, padding: 16 }}>
+                                    <div style={{ ...panelStyle, marginTop: 14, padding: 16 }}>
                                         <div style={{ ...overlineStyle, color: "var(--accent)", marginBottom: 12 }}>Your interaction:</div>
 
                                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>

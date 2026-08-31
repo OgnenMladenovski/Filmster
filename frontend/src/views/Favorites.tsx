@@ -52,7 +52,7 @@ export function Favorites({ onOpenMovie, onGoToBrowse }: Props) {
 
       <div
         style={{
-          border: "1px solid var(--border)",
+          border: "1.5px solid var(--border)",
           padding: "16px 18px",
           background: "var(--bg-elevated)",
           marginBottom: 28,

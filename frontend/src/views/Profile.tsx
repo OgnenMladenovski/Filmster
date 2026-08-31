@@ -16,7 +16,7 @@ interface Props {
 }
 
 const panelStyle: CSSProperties = {
-    border: "1px solid var(--border)",
+    border: "1.5px solid var(--border)",
     background: "var(--bg-elevated)",
 };
 
@@ -107,9 +107,8 @@ export function Profile({token, onOpenMovie, onGoToBrowse}: Props) {
                         style={{
                             width: 72,
                             height: 72,
-                            //borderRadius: "50%",
-                            //background: "var(--accent-contrast)",
-                            //border: "1px solid var(--accent)",
+                            background: "var(--bg-hover)",
+                            border: "1.5px solid var(--border)",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -143,12 +142,12 @@ export function Profile({token, onOpenMovie, onGoToBrowse}: Props) {
                                 minWidth: 160,
                             }}
                         >
-                            <span style={{fontSize: 14, color: "var(--accent)"}}>{s.label}</span>
+                            <span style={{fontSize: 14, color: "var(--text-muted)"}}>{s.label}</span>
                             <span
                                 style={{
                                     fontSize: 18,
                                     fontWeight: 700,
-                                    color: "var(--text)",
+                                    color: s.accent ? "var(--accent)" : "var(--text)",
                                     fontVariantNumeric: "tabular-nums",
                                 }}
                             >
@@ -170,7 +169,7 @@ export function Profile({token, onOpenMovie, onGoToBrowse}: Props) {
                                 alignItems: "flex-end",
                                 gap: 10,
                                 height: 150,
-                                borderBottom: "1px solid var(--border)",
+                                borderBottom: "1.5px solid var(--border)",
                             }}
                         >
                             {dist.map((d) => (
@@ -203,7 +202,6 @@ export function Profile({token, onOpenMovie, onGoToBrowse}: Props) {
                                             background: d.count > 0 ? "var(--accent)" : "var(--bg-hover)",
                                             borderRadius: "5px 5px 0 0",
                                             transition: "height 0.35s ease",
-                                            color: "var(--accent)"
                                         }}
                                     />
                                 </div>
@@ -231,13 +229,11 @@ export function Profile({token, onOpenMovie, onGoToBrowse}: Props) {
                             marginBottom: 20,
                             textAlign: "center",
                             color: "var(--accent)",
-                            fontWeight: "bold",
-                            fontSize: 16
                         }}>Top 5 Favorites
                         </div>
-                        <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 16}}>
+                        <div className="no-hover-lift" style={{display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 16}}>
                             {favorites.map((fav) => (
-                                <div key={fav.id} style={{width: 140, color: "var(--accent)"}}>
+                                <div key={fav.id} style={{width: 140}}>
                                     <PosterTile movie={fav.movie} onOpen={() => onOpenMovie(fav.movie.tmdbId)}/>
                                 </div>
                             ))}
@@ -269,7 +265,6 @@ export function Profile({token, onOpenMovie, onGoToBrowse}: Props) {
                                     gap: 16,
                                     padding: 12,
                                     cursor: "pointer",
-                                    borderRadius: 14,
                                 }}
                             >
                                 {rating.movie.posterPath ? (
@@ -408,16 +403,8 @@ export function Profile({token, onOpenMovie, onGoToBrowse}: Props) {
                                 </button>
                             </div>
                         ))}
-                        <div style={{
-                            color: "black",
-                            fontWeight: "bold",
-                            display: "flex",
-                            justifyContent: "center",
-                            marginTop: 20,
-                            marginBottom: -40
-                        }}>
-                            <button style={{background: "var(--accent)"}} onClick={onGoToBrowse}> + Add a new rating
-                            </button>
+                        <div style={{display: "flex", justifyContent: "center", marginTop: 20}}>
+                            <button className="primary" onClick={onGoToBrowse}>+ Add a new rating</button>
                         </div>
                     </div>
                 )}

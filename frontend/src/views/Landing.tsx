@@ -19,13 +19,14 @@ interface Props {
     onSearch: (query: string) => void;
     onGoToFavorites: () => void;
     onRequireAuth: () => void;
+    active: number;
+    onActiveChange: (key: number) => void;
 }
 
 const RECOMMENDED_KEY = -1;
 
-export function Landing({ token, onOpenMovie, onSearch, onGoToFavorites, onRequireAuth }: Props) {
+export function Landing({ token, onOpenMovie, onSearch, onGoToFavorites, onRequireAuth, active, onActiveChange }: Props) {
     const [genres, setGenres] = useState<Genre[]>([]);
-    const [active, setActive] = useState<number>(RECOMMENDED_KEY);
     const [movies, setMovies] = useState<Movie[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -140,7 +141,7 @@ export function Landing({ token, onOpenMovie, onSearch, onGoToFavorites, onRequi
                         display: "flex",
                         gap: "clamp(10px, 3vw, 22px)",
                         marginBottom: 20,
-                        borderBottom: "1px solid var(--border)",
+                        borderBottom: "1.5px solid var(--border)",
                         overflowX: "auto",
                         whiteSpace: "nowrap",
                     }}
@@ -148,7 +149,7 @@ export function Landing({ token, onOpenMovie, onSearch, onGoToFavorites, onRequi
                     {categories.map((c) => (
                         <button
                             key={c.key}
-                            onClick={() => setActive(c.key)}
+                            onClick={() => onActiveChange(c.key)}
                             className={`tab-button ${active === c.key ? "active" : ""}`}
                             style={{
                                 flexShrink: 0,

@@ -49,7 +49,7 @@ export function RateModal({movie, onClose, onRated, initialScore, initialReview,
             style={{
                 position: "fixed",
                 inset: 0,
-                background: "rgba(0,0,0,0.7)",
+                background: "rgba(0,0,0,0.85)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -63,7 +63,8 @@ export function RateModal({movie, onClose, onRated, initialScore, initialReview,
                 onClick={(e) => e.stopPropagation()}
                 style={{
                     background: "var(--bg-elevated)",
-                    border: "1px solid var(--border)",
+                    border: "1.5px solid var(--border)",
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.6)",
                     padding: 32,
                     borderRadius: 14,
                     display: "flex",

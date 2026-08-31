@@ -24,7 +24,7 @@ export function PosterTile({movie, onOpen, badge, onRemove, onRate, onAddFavorit
                     overflow: "hidden",
                     cursor: "pointer",
                     background: "var(--bg-elevated)",
-                    border: "1px solid var(--border)",
+                    border: "1.5px solid var(--border)",
                 }}
                 className="poster-tile"
             >

@@ -47,7 +47,7 @@ export function Hero({ token, onOpenMovie, onSearch }: Props) {
       style={{
         position: "relative",
         overflow: "hidden",
-        border: "1px solid var(--border)",
+        border: "1.5px solid var(--border)",
         marginBottom: 48,
         minHeight: 380,
         display: "flex",
@@ -63,7 +63,7 @@ export function Hero({ token, onOpenMovie, onSearch }: Props) {
           Track films and find your next favorite.
         </h1>
         <p style={{ color: "var(--text-muted)", fontSize: 16, marginBottom: 24, lineHeight: 1.55 }}>
-          Rate what you've watched, build your watchlist, and let an AI model recommend what to watch next, with a reason for every pick.
+            Your five favorites become the search. Every suggestion is a real movie and every one comes with a reason.
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20 }}>
@@ -85,7 +85,7 @@ export function Hero({ token, onOpenMovie, onSearch }: Props) {
               onClick={() => onOpenMovie(featured.tmdbId)}
               style={{
                 background: "rgba(255,255,255,0.08)",
-                border: "1px solid var(--border)",
+                border: "1.5px solid var(--border)",
                 padding: "6px 14px",
                 borderRadius: 999,
                 fontSize: 13,

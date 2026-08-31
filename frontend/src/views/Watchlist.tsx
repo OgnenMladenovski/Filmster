@@ -12,7 +12,7 @@ interface Props {
 }
 
 const panelStyle: CSSProperties = {
-    border: "1px solid var(--border)",
+    border: "1.5px solid var(--border)",
     background: "var(--bg-elevated)",
 };
 

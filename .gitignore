@@ -37,3 +37,5 @@ build/
 .DS_Store
 recommendation-service/venv/
 recommendation-service/__pycache__/
+
+**/.env

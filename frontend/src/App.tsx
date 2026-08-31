@@ -17,6 +17,7 @@ function App() {
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const [tab, setTab] = useState<Tab>("home");
   const [openMovieId, setOpenMovieId] = useState<number | null>(null);
+  const [landingActive, setLandingActive] = useState<number>(-1);
   const [browseQuery, setBrowseQuery] = useState<string | undefined>(undefined);
   const [authOpen, setAuthOpen] = useState(false);
   const [pendingTab, setPendingTab] = useState<Tab | null>(null);
@@ -167,6 +168,8 @@ function App() {
                 onSearch={handleLandingSearch}
                 onGoToFavorites={() => selectTab("favorites")}
                 onRequireAuth={requireAuth}
+                active={landingActive}
+                onActiveChange={setLandingActive}
               />
             )}
             {tab === "browse" && (

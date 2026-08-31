@@ -86,7 +86,7 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
       <div style={{ marginBottom: 8 }}>
         <h2 style={{ fontSize: 26, color: "var(--accent)" }}>For You</h2>
         <p style={{ color: "var(--text-muted)", fontSize: 14, marginTop: 6, lineHeight: 1.6 }}>
-          We take your five favorites and your rated movies, then we pull films TMDB considers similar and let an AI prediction model rank a 5 movie shortlist so that every pick comes with a reason, based on your taste.
+          We take your five favorites and your rated movies, then we pull films TMDB considers similar and let an AI prediction model rank a 5 movie shortlist so that every pick comes with a reason based on your taste.
         </p>
       </div>
 
@@ -98,7 +98,7 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
                     alignItems: "center",
                     gap: 16,
                     padding: "24px 16px",
-                    border: "1px solid var(--border)",
+                    border: "1.5px solid var(--border)",
                     background: "var(--bg-elevated)",
                     margin: "22px 0",
                 }}
@@ -129,7 +129,7 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
                                 objectFit: "cover",
                                 cursor: "pointer",
                                 background: "var(--bg-hover)",
-                                border: "1px solid var(--border)",
+                                border: "1.5px solid var(--border)",
                                 borderRadius: 15
                             }}
                         />
@@ -158,7 +158,7 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
       {loading && (
         <div
           style={{
-            border: "1px solid var(--border)",
+            border: "1.5px solid var(--border)",
             borderRadius: 10,
             padding: "40px 24px",
             textAlign: "center",
@@ -264,7 +264,7 @@ export function Recommendations({ token, onOpenMovie, onGoToFavorites }: Props) 
                 style={{
                   display: "flex",
                   gap: 16,
-                  border: "1px solid var(--border)",
+                  border: "1.5px solid var(--border)",
                   borderRadius: 10,
                   padding: 14,
                   background: "var(--bg-elevated)",

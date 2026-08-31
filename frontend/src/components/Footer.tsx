@@ -2,7 +2,7 @@ export function Footer() {
   return (
     <footer
       style={{
-        borderTop: "1px solid var(--border)",
+        borderTop: "1.5px solid var(--border)",
         marginTop: 48,
         padding: "28px 24px",
         color: "var(--text-faint)",
