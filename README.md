@@ -24,20 +24,19 @@ A Letterboxd inspired movie rating web application. Users authenticate with JWT,
 
 ## Tech Stack
 
-| Layer             | Technology         |
-|-------------------|--------------------|
+| Layer             | Technology       |
+|-------------------|------------------|
 | Frontend          | React 19, TypeScript |
 | Backend           | Java 21, Spring Boot 4.1 |
 | Security          | Spring Security + JWT |
-| Database          | PostgreSQL         |
-| Migrations        | Flyway             |
-| Build Tool        | Maven              |
-| Utilities         | Lombok             |
-|                   |                    |
-| AI Service        | FastAPI / Python   |
-| LLM Orchestration | LangChain + langchain-ollama |
-| Local LLM Runtime | Ollama (llama3.2:3b / qwen2.5:7b) |
-| API               | TMDB API           |
+| Database          | PostgreSQL       |
+| Migrations        | Flyway           |
+| Build Tool        | Maven            |
+| Utilities         | Lombok           |
+| AI Service        | FastAPI / Python |
+| LLM Orchestration | LangChain|
+| Local LLM Runtime | Ollama (llama3.2:3b) |
+| API               | TMDB API         |
 
 ---
 
@@ -126,20 +125,13 @@ cd Filmster
 CREATE DATABASE movie_app;
 ```
 
-**4. Configure environment variables (`backend/.env`)**
-
-The backend auto-imports a `.env` file from its working directory
-(`spring.config.import=optional:file:.env[.properties]`), so it lives in the `backend/` folder. Create `backend/.env`:
-
+**4. Configure the backend environment variables (`backend/.env`)**
 ```properties
 TMDB_API_KEY=your_tmdb_api_key
 JWT_SECRET_KEY=your_long_random_secret
 ```
 
-Database credentials live in `backend/src/main/resources/application.properties`
-(default user `postgres` - update the password to match your local PostgreSQL).
-
-**5. Configure the frontend (`frontend/.env`)**
+**5. Configure the frontend environment variables (`frontend/.env`)**
 ```properties
 VITE_BASE_API_URL=http://localhost:8080/api
 ```
