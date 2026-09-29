@@ -1,6 +1,6 @@
 # Filmster
 
-> Project for the course <b>Advanced Web Programming</b> at the Faculty of Computer Science and Engineering (FINKI), Ss. Cyril and Methodius University, Skopje.
+Project for the course **Advanced Web Programming** at the Faculty of Computer Science and Engineering (FINKI), Ss. Cyril and Methodius University, Skopje.
 
 ---
 
